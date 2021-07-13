@@ -5,6 +5,15 @@
  */
 package convertidor_monedas;
 
+import java.awt.Color;
+
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+
 /**
  *
  * @author Usuario
@@ -16,6 +25,39 @@ public class ConverterWindow extends javax.swing.JFrame {
      */
     public ConverterWindow() {
         initComponents();
+        this.setLocationRelativeTo(null);
+
+        this.jBtnConvert.setEnabled(false);
+        this.jTxtFldAmount.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                checkValue();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkValue();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkValue();
+            }
+
+            public void checkValue() {
+                boolean success = true;
+                try {
+                    Double.parseDouble(jTxtFldAmount.getText());
+                } catch (Exception e) {
+                    jTxtFldAmount.setBorder(new LineBorder(Color.red));
+                    jBtnConvert.setEnabled(false);
+                    success = false;
+                } if (success) {
+                    jTxtFldAmount.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+                    jBtnConvert.setEnabled(true);
+                }
+            }
+        });
     }
 
     /**
@@ -35,8 +77,10 @@ public class ConverterWindow extends javax.swing.JFrame {
         jCmbBoxTo = new javax.swing.JComboBox<>();
         jBtnConvert = new javax.swing.JButton();
         jLblConversion = new javax.swing.JLabel();
+        jBtnSwitch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Currency converter");
         setResizable(false);
 
         jTxtFldAmount.setMinimumSize(new java.awt.Dimension(50, 20));
@@ -62,28 +106,40 @@ public class ConverterWindow extends javax.swing.JFrame {
         jLblConversion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLblConversion.setText("Conversion");
 
+        jBtnSwitch.setText("Switch");
+        jBtnSwitch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnSwitchActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jBtnSwitch, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(149, 149, 149))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(209, 209, 209)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLblAmount)
-                            .addComponent(jLblFrom)
-                            .addComponent(jLblTo))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jBtnConvert, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTxtFldAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jCmbBoxFrom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jCmbBoxTo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(234, 234, 234)
-                        .addComponent(jLblConversion, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLblConversion, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(209, 209, 209)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jBtnConvert, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLblAmount)
+                                    .addComponent(jLblFrom)
+                                    .addComponent(jLblTo))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTxtFldAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jCmbBoxFrom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jCmbBoxTo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap(245, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -97,13 +153,15 @@ public class ConverterWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLblFrom)
                     .addComponent(jCmbBoxFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34)
+                .addGap(8, 8, 8)
+                .addComponent(jBtnSwitch)
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLblTo)
                     .addComponent(jCmbBoxTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                .addGap(34, 34, 34)
                 .addComponent(jBtnConvert)
-                .addGap(48, 48, 48)
+                .addGap(49, 49, 49)
                 .addComponent(jLblConversion)
                 .addContainerGap(63, Short.MAX_VALUE))
         );
@@ -112,11 +170,20 @@ public class ConverterWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBtnConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnConvertActionPerformed
-        double conversion = Convertidor.convert(Integer.parseInt(jTxtFldAmount.getText()), jCmbBoxFrom.getSelectedItem().toString(), jCmbBoxTo.getSelectedItem().toString());
+        try {
+            double conversion = Convertidor.convert(Double.parseDouble(jTxtFldAmount.getText()), jCmbBoxFrom.getSelectedItem().toString(), jCmbBoxTo.getSelectedItem().toString());
 
-        jLblConversion.setText(Double.toString(conversion));
-
+            jLblConversion.setText(Double.toString(conversion));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Please write a valid number");
+        }
     }//GEN-LAST:event_jBtnConvertActionPerformed
+
+    private void jBtnSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSwitchActionPerformed
+        int temp = jCmbBoxFrom.getSelectedIndex();
+        jCmbBoxFrom.setSelectedIndex(jCmbBoxTo.getSelectedIndex());
+        jCmbBoxTo.setSelectedIndex(temp);
+    }//GEN-LAST:event_jBtnSwitchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,6 +222,7 @@ public class ConverterWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBtnConvert;
+    private javax.swing.JButton jBtnSwitch;
     private javax.swing.JComboBox<String> jCmbBoxFrom;
     private javax.swing.JComboBox<String> jCmbBoxTo;
     private javax.swing.JLabel jLblAmount;
